@@ -1,5 +1,5 @@
 # Desafio para novos membros na Simbiose em Backend: 
-##Python e SQAlchemy
+## Python e SQAlchemy
 
 Desenvolver uma API REST para registro de indicações na Simbiose. Neste repositório está
 disponibilizado a base inicial do código, com uma API em Flask, funcional e com os endpoints
