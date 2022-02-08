@@ -1,8 +1,6 @@
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
-app.run(debug=True)
-
 
 @app.route('/teams', methods=['POST'])
 def register_teams():
@@ -24,12 +22,12 @@ def register_employees():
     return jsonify(return_dict)
 
 
-@app.route('/referrals', methods=['POST'])
-def register_referrals():
+@app.route('/recommendations', methods=['POST'])
+def register_recommendations():
     # Get data from the POST body
     request_data = request.get_json()
 
-    return_dict = {"example": "Register referrals!"}
+    return_dict = {"example": "Register recommendations!"}
 
     return jsonify(return_dict)
 
@@ -41,15 +39,19 @@ def get_all_teams():
     return jsonify(return_dict)
 
 
-@app.route('/referrals', methods=['GET'])
-def get_all_referrals():
-    return_dict = {"example": "List referrals!"}
+@app.route('/recommendations', methods=['GET'])
+def get_all_recommendations():
+    return_dict = {"example": "List recommendations!"}
 
     return jsonify(return_dict)
 
 
-@app.route('/referrals/employees', methods=['GET'])
-def get_all_referrals_employees():
+@app.route('/recommendations/employees', methods=['GET'])
+def get_all_employees_with_recommendations():
     return_dict = {"example": "List employees!"}
 
     return jsonify(return_dict)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
