@@ -8,16 +8,16 @@ As seguintes tecnologias devem ser utilizadas: Python, MySQL e SQL Alchemy.
 O sistema deve ser capaz de realizar as seguintes ações:
 - Registrar Equipes(times) `(POST /teams)`
 - Registrar Funcionários (e possibilitar vincular a uma equipe) `(POST /employees)`
-- Registrar Indicações. `(POST /referrals)`
+- Registrar Indicações. `(POST /recommendations)`
 - Retornar uma lista de equipes e respectivos funcionários `(GET /teams)`
-- Retornar uma lista de indicações `(GET /referrals)`
-- Retornar quais funcionários realizaram indicações `(GET /referrals/employees)`
+- Retornar uma lista de indicações `(GET /recommendations)`
+- Retornar quais funcionários realizaram indicações `(GET /recommendations/employees)`
 
 
 ### Para utilizar a API
 Para rodar o servidor execute o comando abaixo no terminal dentro da pasta raíz do projeto:
 ```
-FLASK_APP=main.py flask run
+python3 main.py
 ```
 A seguinte mensagem deve aparecer:
 ```
