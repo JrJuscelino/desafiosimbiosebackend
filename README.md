@@ -25,7 +25,7 @@ Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 ```
 
 Pronto, sua API está rodando no endereço `http://127.0.0.1:5000/`. Utilizando o Insomnia ou a sua
-ferramente de preferência você pode fazer requisições nos endpoins:
+ferramenta de preferência você pode fazer requisições nos endpoins:
 ![Exemplo de requisição](request_example.png)
 
 Agora, a partir do código inicial da API, desenvolva seu sistema. A modelagem do banco de
