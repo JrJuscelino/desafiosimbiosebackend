@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, request
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import Column, Integer, String, ForeignKey
 
 app = Flask(__name__)
 
@@ -12,14 +12,40 @@ session = Session()
 Base = declarative_base()
 
 
-class User(Base):
-    __tablename__ = "users"
+class Recommendation(Base):
+    __tablename__ = 'recommendations'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(60))
+    employee_id = Column(Integer, ForeignKey('employees.id'))
+    employee = relationship('Employee')
 
     def __repr__(self):
-        return f'User {self.name}'
+        return f'Recommendation {self.name}'
+
+
+class Employee(Base):
+    __tablename__ = "employees"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(60))
+    recommendations = relationship(Recommendation, backref='recommendation')
+    team_id = Column(Integer, ForeignKey('teams.id'))
+    team = relationship('Team')
+
+    def __repr__(self):
+        return f'Employee {self.name}'
+
+
+class Team(Base):
+    __tablename__ = 'teams'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(60))
+    employees = relationship(Employee, backref='employee')
+
+    def __repr__(self):
+        return f'Team {self.name}'
 
 
 Base.metadata.create_all(engine)
