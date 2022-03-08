@@ -51,13 +51,16 @@ class Team(Base):
 Base.metadata.create_all(engine)
 
 
-# try write a good documentation
 @app.route('/teams', methods=['POST'])
 def register_teams():
     # Get data from the POST body
     request_data = request.get_json()
+    team = Team(name=request_data['name'])
+    session.add(team)
+    session.commit()
+    session.close()
 
-    return_dict = {"example": "Register teams!"}
+    return_dict = {"example": request_data['name']}
 
     return jsonify(return_dict)
 
@@ -66,8 +69,12 @@ def register_teams():
 def register_employees():
     # Get data from the POST body
     request_data = request.get_json()
+    employee = Employee(name=request_data['name'], team_id=request_data['team_id'])
+    session.add(employee)
+    session.commit()
+    session.close()
 
-    return_dict = {"example": "Register employees!"}
+    return_dict = {"example": request_data['name']}
 
     return jsonify(return_dict)
 
@@ -76,8 +83,14 @@ def register_employees():
 def register_recommendations():
     # Get data from the POST body
     request_data = request.get_json()
+    recommendation = Recommendation(name=request_data['name'], employee_id=request_data['employee_id'])
+    session.add(recommendation)
+    session.commit()
+    session.close()
 
-    return_dict = {"example": "Register recommendations!"}
+    return_dict = {"example": request_data['name']}
+
+    #return_dict = {"example": "Register recommendations!"}
 
     return jsonify(return_dict)
 
