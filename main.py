@@ -11,38 +11,40 @@ Session = sessionmaker(bind=engine)
 session = Session()
 Base = declarative_base()
 
-
-class Recommendation(Base):
-    __tablename__ = 'recommendations'
+class Team(Base):
+    __tablename__ = 'teams'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(60))
-    employee_id = Column(Integer, ForeignKey('employees.id'))
+    name = Column(String)
+    employees = relationship('Employee')
 
     def __repr__(self):
-        return f'Recommendation {self.name}'
+        return f'Team {self.name}'
 
 
 class Employee(Base):
     __tablename__ = "employees"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(60))
-    recommendations = relationship(Recommendation, backref='recommendation')
+    name = Column(String)
     team_id = Column(Integer, ForeignKey('teams.id'))
+    recommendations = relationship('Recommendation')
+
 
     def __repr__(self):
         return f'Employee {self.name}'
 
-class Team(Base):
-    __tablename__ = 'teams'
+
+
+class Recommendation(Base):
+    __tablename__ = 'recommendations'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(60))
-    employees = relationship(Employee, backref='employee')
+    name = Column(String)
+    employee_id = Column(Integer, ForeignKey('employees.id'))
 
     def __repr__(self):
-        return f'Team {self.name}'
+        return f'Recommendation {self.name}'
 
 
 Base.metadata.create_all(engine)
@@ -94,8 +96,7 @@ def register_recommendations():
 
 @app.route('/teams', methods=['GET'])
 def get_all_teams():
-    return_dict = {"example": "'List teams!'"}
-    teams = session.query(Team).order_by(Team.id)
+    teams = session.query(Team) # .join(Employee, Team.id == Employee.team_id)
     employees = session.query(Employee)
 
     id_list = []
@@ -111,13 +112,14 @@ def get_all_teams():
         id_teams_and_employees.append([i, employee_list])
 
     list_teams_and_employees = []
-    aux = 1
-    for id in id_list:  # while aux <= id_list[-1]:
+    var = 1
+    for id in id_list:
         for i in teams:
             if i.id == id:
                 list_teams_and_employees.append(
-                    {"team": i.name, "team_id": i.id, "employees": id_teams_and_employees[aux - 1][1]})
-        aux = aux + 1
+                    {"team": i.name, "team_id": i.id, "employees": id_teams_and_employees[var - 1][1]})
+        var += 1
+
     return jsonify(list_teams_and_employees)
 
 
@@ -126,27 +128,20 @@ def get_all_recommendations():
     return_list = []
     recommendations = session.query(Recommendation)
 
-    for i in recommendations:
-        recommendation = {"recommended_name": i.name, "recommended_id": i.id}
-        return_list.append(recommendation)
+    list_recommendations = [dict(id=rec.id, name=rec.name) for rec in recommendations]
 
-    return jsonify(return_list)
+    return jsonify(list_recommendations)
 
 
 @app.route('/recommendations/employees', methods=['GET'])
 def get_all_employees_with_recommendations():
-    return_list = []
     recommendations = session.query(Recommendation)
     employees = session.query(Employee)
 
-    for i in recommendations:
-        for j in employees:
-            if i.employee_id == j.id:
-                employee_and_recommended = {"employee_name": j.name, "employee_id": j.id, "recommended_name": i.name,
-                                            "recommended_id": i.id}
-                return_list.append(employee_and_recommended)
+    list_emp_and_rec = [[dict(id_emp=emp.id, name_emp=emp.name, id_rec=rec.id, name_rec=rec.name
+    if rec.employee_id == emp.id else '') for emp in employees] for rec in recommendations]
 
-    return jsonify(return_list)
+    return jsonify(list_emp_and_rec)
 
 
 if __name__ == "__main__":
