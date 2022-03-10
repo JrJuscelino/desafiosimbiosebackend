@@ -15,7 +15,7 @@ class Team(Base):
     __tablename__ = 'teams'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String(60))
     employees = relationship('Employee')
 
     def __repr__(self):
@@ -26,7 +26,7 @@ class Employee(Base):
     __tablename__ = "employees"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String(60))
     team_id = Column(Integer, ForeignKey('teams.id'))
     recommendations = relationship('Recommendation')
 
@@ -40,7 +40,7 @@ class Recommendation(Base):
     __tablename__ = 'recommendations'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String(60))
     employee_id = Column(Integer, ForeignKey('employees.id'))
 
     def __repr__(self):
@@ -125,7 +125,6 @@ def get_all_teams():
 
 @app.route('/recommendations', methods=['GET'])
 def get_all_recommendations():
-    return_list = []
     recommendations = session.query(Recommendation)
 
     list_recommendations = [dict(id=rec.id, name=rec.name) for rec in recommendations]
